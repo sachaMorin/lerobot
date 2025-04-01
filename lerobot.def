@@ -40,17 +40,19 @@ Stage: build
     conda activate lerobot
     conda install ffmpeg
 
-    # Always activate environment when calling container
-    # from https://stackoverflow.com/questions/56446195/activate-conda-environment-on-execution-of-singularity-container-in-nextflow
-    echo ". /opt/conda/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
-    echo "conda activate lerobot" >> $SINGULARITY_ENVIRONMENT
-
     # LeRobot
     git clone https://github.com/huggingface/lerobot.git
     cd lerobot
     pip install --no-binary=av -e ".[pusht, xarm, aloha]"
     pip uninstall -y opencv-python
     pip install opencv-python-headless
+
+    # Always activate environment when calling container
+    # from https://stackoverflow.com/questions/56446195/activate-conda-environment-on-execution-of-singularity-container-in-nextflow
+    # Not sure why but this needs to be at the end of %post?
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
+    echo "conda activate lerobot" >> $SINGULARITY_ENVIRONMENT
+
 
 %labels
     Author sacha
